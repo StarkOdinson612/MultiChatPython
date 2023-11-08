@@ -2,7 +2,7 @@ import customtkinter
 
 
 class MemberListFrame(customtkinter.CTkScrollableFrame):
-    
+
 
 class UIParent(customtkinter.CTkFrame):
     def __init__(self, master: any, port: str, ip: str, **kwargs):
