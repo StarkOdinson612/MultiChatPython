@@ -1,34 +1,44 @@
-import random
 import socket
 import threading
-import time
 
 from googletrans import Translator
 
-HOST = "127.0.0.1"
-PORT = 50123
-
-langs = ['ar','hi','kn','ja','ru','gd']
-
-# Create a socket
-sock = socket.socket()
-
-tran = Translator()
-
-# Connect to the server
-sock.connect((HOST, PORT))
+from src.GUI.MemberList.MemberListFrame import MemberListFrame
+from src.GUI.TextFrame.TextFrame import TextFrame
 
 
-def handle_connection(sock: socket):
-    # Continuously read data from the client and print it out
-    while True:
-        data = sock.recv(4096)
-        if not data:
-            break
-        print(data.decode())
+class NetworkingClient:
+    def __init__(self, port: str, ip: int, name: str, member_list_frame: MemberListFrame, text_frame: TextFrame):
+        self.IP = ip
+        self.PORT = port
+        self.mlf = member_list_frame
+        self.txtfrm = text_frame
 
+        self.c_socket = socket.socket()
+        self.c_socket.bind((self.IP, self.PORT))
 
-bo = threading.Thread(target=handle_connection)
-bo.start()
+        self.send_dat(name)
+
+        self.recvthrd = threading.Thread(target=self.receive_dat)
+        self.recvthrd.start()
+
+    def receive_dat(self):
+        while True:
+            data = self.c_socket.recv(4096)
+            if not data:
+                break
+            self.handle_dat(data)
+
+    def handle_dat(self, data):
+        if "$$UPDATE$$" in data:
+            members = data.split("|")[1].split(";")
+            self.mlf.update_memlist(members)
+            return
+
+        self.txtfrm.append_txt(data)
+
+    def send_dat(self, msg: str):
+        self.c_socket.sendall(msg)
+
 
 

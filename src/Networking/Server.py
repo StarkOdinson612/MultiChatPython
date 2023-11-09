@@ -61,7 +61,7 @@ sock = socket.socket()
 sock.bind((HOST, PORT))
 
 # Listen for incoming connections
-sock.listen()
+sock.listen(200)
 
 clients: [Client] = []
 
