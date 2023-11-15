@@ -14,7 +14,7 @@ class MemberListFrame(customtkinter.CTkScrollableFrame):
             i.destroy()
 
         for i in memberstr:
-            temp = MemberWidget(self, name=i)
+            temp = MemberWidget(self, name=i, corner_radius=10)
             temp.grid(row=len(self.members), column=0, padx=5, pady=5, sticky="ew")
             self.members.append(temp)
         print(self.members)

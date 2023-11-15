@@ -6,8 +6,10 @@ class Client:
     socket: socket
     addr: str
     name: str
+    stup: (str, int)
 
     def __init__(self, socket_tup):
+        self.stup = socket_tup
         self.socket = socket_tup[0]
         self.addr = socket_tup[1]
         self.name = self.accept_message()
@@ -21,6 +23,9 @@ class Client:
 
     def send_msg(self, inp: str):
         self.socket.sendall(inp.encode())
+
+    def get_addr_tup(self):
+        return self.stup
 
     def get_addr(self):
         return self.addr

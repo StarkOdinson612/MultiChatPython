@@ -10,7 +10,7 @@ class MemberWidget(customtkinter.CTkFrame):
         self.grid_rowconfigure(0, weight=1)
         self.textbox = customtkinter.CTkLabel(master=self,
                                               text=name,
-                                              corner_radius=5)
+                                              corner_radius=10)
         self.textbox.grid(row=0, column=0, sticky="nsew")
 
     def get_name(self):

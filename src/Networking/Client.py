@@ -19,6 +19,7 @@ class NetworkingClient:
         self.c_socket.connect((self.IP, self.PORT))
 
         self.recvthrd = threading.Thread(target=self.receive_dat)
+        self.recvthrd.setDaemon(True)
         self.recvthrd.start()
 
         self.send_dat(self.NAME)
@@ -29,18 +30,20 @@ class NetworkingClient:
             data = self.c_socket.recv(4096)
             if not data:
                 break
+
             self.handle_dat(data.decode())
+
             print("Received message")
             print(data)
 
     def handle_dat(self, data):
         if "$$UPDATE$$" in data:
-            members = data.split("|")[1].split(";")
+            members = "|".join(data.split("|")[1:]).split(";")
             self.mlf.update_memlist(members)
             return
 
         if "$$MSG$$" in data:
-            msg = data.split("|")[1]
+            msg = "|".join(data.split("|")[1:])
             self.txtfrm.append_txt(msg)
             return
 
